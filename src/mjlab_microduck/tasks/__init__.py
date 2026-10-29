@@ -689,6 +689,18 @@ register_mjlab_task(
 )
 
 
+# Big duck: Microduck at 1.4x on ST3215 servos (robot/bigduck_constants.py).
+from .bigduck_velocity_env_cfg import BigduckRlCfg, make_bigduck_velocity_env_cfg
+
+register_mjlab_task(
+    task_id="Mjlab-Velocity-Flat-BigDuck",
+    env_cfg=make_bigduck_velocity_env_cfg(),
+    play_env_cfg=make_bigduck_velocity_env_cfg(play=True),
+    rl_cfg=BigduckRlCfg,
+    runner_cls=MicroduckOnPolicyRunner,
+)
+
+
 from mjlab_microduck.play_hook import maybe_inject_latest_checkpoint
 
 # After all task ids are registered: `play TASK` with no checkpoint flag
