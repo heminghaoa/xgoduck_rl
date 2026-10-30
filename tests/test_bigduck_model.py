@@ -52,3 +52,27 @@ def test_bigduck_walk_task_scales_lengths():
             micro.rewards[name].params["target_height"] * bc.SCALE)
     assert cfg.events["reset_base"].params["pose_range"]["z"] == (0.0, 0.0)
     assert cfg.scene.entities["robot"].init_state.pos[2] == bc.BIGDUCK_STAND_Z
+
+
+def test_bigduck_standup_task_scales_heights():
+    from mjlab_microduck.tasks.bigduck_standup_env_cfg import (
+        BACK_BAY_PRONE_LIFT,
+        REWARD_LENGTHS,
+        RESET_LENGTHS,
+    )
+
+    cfg = load_env_cfg("Mjlab-StandUp-Flat-BigDuck")
+    micro = load_env_cfg("Mjlab-StandUp-Flat-MicroDuck")
+    for name, keys in REWARD_LENGTHS.items():
+        for key in keys:
+            assert cfg.rewards[name].params[key] == pytest.approx(
+                micro.rewards[name].params[key] * bc.SCALE)
+    for key in RESET_LENGTHS:
+        lift = BACK_BAY_PRONE_LIFT if key.startswith("prone") else 0.0
+        assert cfg.events["set_ground_state"].params[key] == pytest.approx(
+            micro.events["set_ground_state"].params[key] * bc.SCALE + lift)
+    assert cfg.commands["body_pose"].ranges[2] == pytest.approx(
+        tuple(v * bc.SCALE for v in micro.commands["body_pose"].ranges[2]))
+    # Microduck's measured stand sits a few mm under its HOME frame; the scaled one does too.
+    stand = cfg.rewards["height_stand"].params["target_height"]
+    assert 0.0 < bc.BIGDUCK_STAND_Z - stand < 0.006

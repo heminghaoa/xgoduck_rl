@@ -10,7 +10,11 @@ from dataclasses import replace
 
 from mjlab.sensor import RingPatternCfg
 
-from mjlab_microduck.robot.bigduck_constants import BIGDUCK_WALK_ROBOT_CFG, SCALE
+from mjlab_microduck.robot.bigduck_constants import (
+    BIGDUCK_WALK_ROBOT_CFG,
+    HEAD_BODY_NAMES,
+    SCALE,
+)
 from mjlab_microduck.tasks.microduck_velocity_env_cfg import (
     MicroduckRlCfg,
     make_microduck_velocity_env_cfg,
@@ -32,11 +36,8 @@ def make_bigduck_velocity_env_cfg(**kwargs):
     # reset_root_state_uniform adds this range to HOME's height, which already leaves the soles
     # 1 mm up.
     cfg.events["reset_base"].params["pose_range"]["z"] = (0.0, 0.0)
-    # MicroDuck's legacy head list includes bearing_roll, which is its right hip.
     if "randomize_head_com" in cfg.events:
-        cfg.events["randomize_head_com"].params["asset_cfg"].body_names = (
-            "neck", "neck_pitch", "yaw_roll_motion", "jaw_soft",
-        )
+        cfg.events["randomize_head_com"].params["asset_cfg"].body_names = HEAD_BODY_NAMES
     for name in ("foot_clearance", "foot_swing_height"):
         cfg.rewards[name].params["target_height"] *= SCALE
     cfg.scene.sensors = tuple(

@@ -41,6 +41,9 @@ SCALE = 1.4
 STRUCT_MASS_FACTOR = (SCALE**2 + SCALE**3) / 2
 HEEL = 0.016  # m added behind each sole
 HEAD_YAW_LIMIT = math.pi / 2
+# Bodies the tasks shift the head CoM on. MicroDuck's legacy list includes bearing_roll, which is
+# its right hip.
+HEAD_BODY_NAMES = ("neck", "neck_pitch", "yaw_roll_motion", "jaw_soft")
 
 XL330_MASS = 0.018
 ST3215_MASS = 0.055

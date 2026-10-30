@@ -691,12 +691,20 @@ register_mjlab_task(
 
 # Big duck: Microduck at 1.4x on ST3215 servos (robot/bigduck_constants.py).
 from .bigduck_velocity_env_cfg import BigduckRlCfg, make_bigduck_velocity_env_cfg
+from .bigduck_standup_env_cfg import BigduckStandUpRlCfg, make_bigduck_standup_env_cfg
 
 register_mjlab_task(
     task_id="Mjlab-Velocity-Flat-BigDuck",
     env_cfg=make_bigduck_velocity_env_cfg(),
     play_env_cfg=make_bigduck_velocity_env_cfg(play=True),
     rl_cfg=BigduckRlCfg,
+    runner_cls=MicroduckOnPolicyRunner,
+)
+register_mjlab_task(
+    task_id="Mjlab-StandUp-Flat-BigDuck",
+    env_cfg=make_bigduck_standup_env_cfg(),
+    play_env_cfg=make_bigduck_standup_env_cfg(play=True),
+    rl_cfg=BigduckStandUpRlCfg,
     runner_cls=MicroduckOnPolicyRunner,
 )
 
